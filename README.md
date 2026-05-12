@@ -57,7 +57,7 @@
 ## نصب سریع
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/YOUR-USERNAME/telegram-bale-ssh-bot/main/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/ariaghasemi/SSH-Terminal-Bot-for-Telegram-and-Bale/main/install.sh)
 ```
 نصب‌کننده از تو میپرسه کدوم پیامرسان رو نصب کنی.
 ## لایسنس
