@@ -1,3 +1,4 @@
+cat > install.sh << 'EOF'
 #!/bin/bash
 
 GREEN='\033[0;32m'
