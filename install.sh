@@ -101,7 +101,7 @@ def get_text(key):
         "enter_host": ["آدرس IP یا هاست سرور را وارد کن:", "Enter server IP or hostname:"],
         "enter_port": ["پورت SSH (پیش‌فرض 22):", "Enter SSH port (default 22):"],
         "enter_user": ["نام کاربری:", "Enter username:"],
-        "enter_pass": ["رمز عبور را داخل \" \" قرار دهید:\nمثال: \"@1386ARIA\"", "Enter password inside \" \":\nExample: \"@1386ARIA\""],
+        "enter_pass": ["رمز عبور را داخل \" \" قرار دهید:\nمثال: \"@1386ariayemerta\"", "Enter password inside \" \":\nExample: \"@ariayemerta\""],
         "connected": ["✅ متصل شدی به", "✅ Connected to"],
         "conn_failed": ["❌ خطا در اتصال:", "❌ Connection failed:"],
         "closed": ["🔌 جلسه SSH بسته شد", "🔌 SSH session closed"],
