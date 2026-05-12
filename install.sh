@@ -1,9 +1,14 @@
+
+---
+
+## 3️⃣ فایل `install.sh`
+
+```bash
 #!/bin/bash
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m'
 
 clear
@@ -24,99 +29,6 @@ if [[ $choice -lt 1 || $choice -gt 3 ]]; then
     exit 1
 fi
 
-echo -e "${YELLOW}Choose bot language:${NC}"
-echo "1) Persian (فارسی)"
-echo "2) English"
-read -p "Enter your choice [1-2]: " lang_choice
-
-if [[ $lang_choice == "1" ]]; then
-    LANG="fa"
-    CONNECT_BTN="🔌 اتصال"
-    DISCONNECT_BTN="❌ قطع اتصال"
-    CTRL_C_BTN="⛔ Ctrl+C"
-    CTRL_D_BTN="🔚 Ctrl+D"
-    CTRL_X_BTN="💾 Ctrl+X"
-    CTRL_X_Y_BTN="💾 Ctrl+X+Y"
-    CTRL_X_N_BTN="🚫 Ctrl+X+N"
-    CLEAR_BTN="🧹 پاک کردن فایل"
-    UPLOAD_BTN="📤 آپلود و پیست"
-    LAST_50_BTN="🔁 50 خط آخر"
-    LAST_100_BTN="🔁 100 خط آخر"
-    ENTER_BTN="⏎ Enter"
-    HELP_BTN="📋 راهنما"
-    RECONNECT_BTN="🔄 اتصال مجدد"
-    DEV_BTN="👨‍💻 توسعه دهنده"
-    
-    START_MSG="🤖 ربات ترمینال SSH\nاز دکمه‌های زیر برای اتصال استفاده کن"
-    CONNECT_PROMPT="آدرس IP یا هاست سرور را وارد کن:"
-    PORT_PROMPT="پورت SSH (پیش‌فرض 22):"
-    USERNAME_PROMPT="نام کاربری:"
-    PASSWORD_PROMPT="رمز عبور:"
-    CONNECTED_MSG="متصل شدی به"
-    CONNECTION_FAILED="اتصال ناموفق:"
-    SESSION_CLOSED="جلسه SSH بسته شد"
-    NO_SESSION="هیچ جلسه فعالی نیست"
-    CTRL_SENT="ارسال شد"
-    SAVE_EXIT="ذخیره و خروج"
-    CANCEL="لغو تغییرات"
-    CLEAR_MSG="محتوای فایل پاک شد"
-    UPLOAD_MSG="فایل txt را ارسال کن تا در ترمینال پیست شود"
-    PASTED_MSG="محتوای فایل در ترمینال پیست شد"
-    SENDING_LINES="در حال ارسال خطوط"
-    ENTER_SENT="Enter ارسال شد"
-    RECONNECT_MSG="در حال اتصال مجدد..."
-    ACCESS_DENIED="دسترسی غیرمجاز"
-    PRESS_CONNECT="ابتدا دکمه اتصال را بزن"
-    ONLY_TXT="فقط فایل txt قبول می‌شود"
-    CONNECT_FIRST="ابتدا به سرور متصل شو"
-    HELP_TEXT="راهنما:\nاتصال - اتصال به SSH\nCtrl+C - قطع فرمان\nCtrl+D - خروج از شل\nآپلود و پیست - ارسال فایل متنی\nخطوط آخر - نمایش تاریخچه"
-    
-    DEV_TEXT="👨‍💻 توسعه دهنده:\n\n📱 تلگرام: @Aria_qi\n💚 بله: @aria_qi\n🐙 گیت‌هاب: github.com/ariaghasemi"
-else
-    LANG="en"
-    CONNECT_BTN="🔌 Connect"
-    DISCONNECT_BTN="❌ Disconnect"
-    CTRL_C_BTN="⛔ Ctrl+C"
-    CTRL_D_BTN="🔚 Ctrl+D"
-    CTRL_X_BTN="💾 Ctrl+X"
-    CTRL_X_Y_BTN="💾 Ctrl+X+Y"
-    CTRL_X_N_BTN="🚫 Ctrl+X+N"
-    CLEAR_BTN="🧹 Clear File"
-    UPLOAD_BTN="📤 Upload & Paste"
-    LAST_50_BTN="🔁 Last 50 Lines"
-    LAST_100_BTN="🔁 Last 100 Lines"
-    ENTER_BTN="⏎ Enter"
-    HELP_BTN="📋 Help"
-    RECONNECT_BTN="🔄 Reconnect"
-    DEV_BTN="👨‍💻 Developer"
-    
-    START_MSG="🤖 SSH Terminal Bot\nUse buttons below to connect"
-    CONNECT_PROMPT="Enter server IP or hostname:"
-    PORT_PROMPT="Enter SSH port (default 22):"
-    USERNAME_PROMPT="Enter username:"
-    PASSWORD_PROMPT="Enter password:"
-    CONNECTED_MSG="Connected to"
-    CONNECTION_FAILED="Connection failed:"
-    SESSION_CLOSED="SSH session closed"
-    NO_SESSION="No active session"
-    CTRL_SENT="sent"
-    SAVE_EXIT="save & exit"
-    CANCEL="cancel"
-    CLEAR_MSG="File content cleared"
-    UPLOAD_MSG="Send a .txt file to paste in terminal"
-    PASTED_MSG="File content pasted in terminal"
-    SENDING_LINES="Sending lines"
-    ENTER_SENT="Enter sent"
-    RECONNECT_MSG="Reconnecting..."
-    ACCESS_DENIED="Access denied"
-    PRESS_CONNECT="Press Connect button first"
-    ONLY_TXT="Only .txt files are accepted"
-    CONNECT_FIRST="Connect to SSH first"
-    HELP_TEXT="Commands:\nConnect - SSH connection\nCtrl+C - Interrupt\nCtrl+D - Exit shell\nUpload & Paste - Send text file\nLast Lines - Show history"
-    
-    DEV_TEXT="👨‍💻 Developer:\n\n📱 Telegram: @Aria_qi\n💚 Bale: @aria_qi\n🐙 GitHub: github.com/ariaghasemi"
-fi
-
 apt update
 apt install -y python3 python3-pip python3-venv curl
 
@@ -130,7 +42,7 @@ if [[ $choice == "1" || $choice == "3" ]]; then
     read -p "Enter your numeric Telegram User ID: " TELEGRAM_USER_ID
     
     mkdir -p telegram
-    cat > telegram/bot.py << TELEGRAMCODE
+    cat > telegram/bot.py << 'TELEGRAMCODE'
 #!/usr/bin/env python3
 
 import asyncio
@@ -142,51 +54,10 @@ import paramiko
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from datetime import datetime
+import os
 
-TOKEN = "$TELEGRAM_TOKEN"
-ALLOWED_IDS = [$TELEGRAM_USER_ID]
-
-# Language strings
-CONNECT_BTN = "$CONNECT_BTN"
-DISCONNECT_BTN = "$DISCONNECT_BTN"
-CTRL_C_BTN = "$CTRL_C_BTN"
-CTRL_D_BTN = "$CTRL_D_BTN"
-CTRL_X_BTN = "$CTRL_X_BTN"
-CTRL_X_Y_BTN = "$CTRL_X_Y_BTN"
-CTRL_X_N_BTN = "$CTRL_X_N_BTN"
-CLEAR_BTN = "$CLEAR_BTN"
-UPLOAD_BTN = "$UPLOAD_BTN"
-LAST_50_BTN = "$LAST_50_BTN"
-LAST_100_BTN = "$LAST_100_BTN"
-ENTER_BTN = "$ENTER_BTN"
-HELP_BTN = "$HELP_BTN"
-RECONNECT_BTN = "$RECONNECT_BTN"
-DEV_BTN = "$DEV_BTN"
-
-START_MSG = "$START_MSG"
-CONNECT_PROMPT = "$CONNECT_PROMPT"
-PORT_PROMPT = "$PORT_PROMPT"
-USERNAME_PROMPT = "$USERNAME_PROMPT"
-PASSWORD_PROMPT = "$PASSWORD_PROMPT"
-CONNECTED_MSG = "$CONNECTED_MSG"
-CONNECTION_FAILED = "$CONNECTION_FAILED"
-SESSION_CLOSED = "$SESSION_CLOSED"
-NO_SESSION = "$NO_SESSION"
-CTRL_SENT = "$CTRL_SENT"
-SAVE_EXIT = "$SAVE_EXIT"
-CANCEL = "$CANCEL"
-CLEAR_MSG = "$CLEAR_MSG"
-UPLOAD_MSG = "$UPLOAD_MSG"
-PASTED_MSG = "$PASTED_MSG"
-SENDING_LINES = "$SENDING_LINES"
-ENTER_SENT = "$ENTER_SENT"
-RECONNECT_MSG = "$RECONNECT_MSG"
-ACCESS_DENIED = "$ACCESS_DENIED"
-PRESS_CONNECT = "$PRESS_CONNECT"
-ONLY_TXT = "$ONLY_TXT"
-CONNECT_FIRST = "$CONNECT_FIRST"
-HELP_TEXT = "$HELP_TEXT"
-DEV_TEXT = "$DEV_TEXT"
+TOKEN = "REPLACE_TOKEN"
+ALLOWED_IDS = [REPLACE_USER_ID]
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -203,22 +74,24 @@ def clean_ansi(text):
 
 def get_keyboard():
     keys = [
-        [CONNECT_BTN, DISCONNECT_BTN],
-        [CTRL_C_BTN, CTRL_D_BTN],
-        [CTRL_X_BTN, CTRL_X_Y_BTN],
-        [CTRL_X_N_BTN, CLEAR_BTN],
-        [UPLOAD_BTN, LAST_50_BTN],
-        [LAST_100_BTN, ENTER_BTN],
-        [HELP_BTN, RECONNECT_BTN],
-        [DEV_BTN]
+        ["🔌 Connect", "❌ Disconnect"],
+        ["⛔ Ctrl+C", "🔚 Ctrl+D"],
+        ["💾 Ctrl+X", "💾 Ctrl+X+Y"],
+        ["🚫 Ctrl+X+N", "🧹 Clear File"],
+        ["📤 Upload & Paste", "🔁 Last 50 Lines"],
+        ["🔁 Last 100 Lines", "⏎ Enter"],
+        ["📋 Help", "🔄 Reconnect"]
     ]
     return ReplyKeyboardMarkup(keys, resize_keyboard=True)
 
 async def start(update, context):
     if update.effective_chat.id not in ALLOWED_IDS:
-        await update.message.reply_text(ACCESS_DENIED)
+        await update.message.reply_text("Access denied")
         return
-    await update.message.reply_text(START_MSG, reply_markup=get_keyboard())
+    await update.message.reply_text(
+        "🤖 SSH Terminal Bot\nUse buttons below to connect",
+        reply_markup=get_keyboard()
+    )
 
 async def handle_text(update, context):
     chat_id = update.effective_chat.id
@@ -227,81 +100,82 @@ async def handle_text(update, context):
     if chat_id not in ALLOWED_IDS:
         return
 
-    if text == CONNECT_BTN:
+    if text == "🔌 Connect":
         user_steps[chat_id] = {"step": "host"}
-        await update.message.reply_text(CONNECT_PROMPT, reply_markup=get_keyboard())
-    elif text == DISCONNECT_BTN:
+        await update.message.reply_text("Enter server IP or hostname:", reply_markup=get_keyboard())
+    elif text == "❌ Disconnect":
         if chat_id in sessions:
             sessions[chat_id]["channel"].close()
             sessions[chat_id]["ssh"].close()
             del sessions[chat_id]
-            await update.message.reply_text(SESSION_CLOSED, reply_markup=get_keyboard())
-        else:
-            await update.message.reply_text(NO_SESSION, reply_markup=get_keyboard())
-    elif text == CTRL_C_BTN and chat_id in sessions:
+            await update.message.reply_text("SSH session closed", reply_markup=get_keyboard())
+    elif text == "⛔ Ctrl+C" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x03')
-        await update.message.reply_text(f"Ctrl+C {CTRL_SENT}", reply_markup=get_keyboard())
-    elif text == CTRL_D_BTN and chat_id in sessions:
+        await update.message.reply_text("Ctrl+C sent", reply_markup=get_keyboard())
+    elif text == "🔚 Ctrl+D" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x04')
-        await update.message.reply_text(f"Ctrl+D {CTRL_SENT}", reply_markup=get_keyboard())
-    elif text == CTRL_X_BTN and chat_id in sessions:
+        await update.message.reply_text("Ctrl+D sent", reply_markup=get_keyboard())
+    elif text == "💾 Ctrl+X" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18')
-        await update.message.reply_text(f"Ctrl+X {CTRL_SENT}", reply_markup=get_keyboard())
-    elif text == CTRL_X_Y_BTN and chat_id in sessions:
+        await update.message.reply_text("Ctrl+X sent", reply_markup=get_keyboard())
+    elif text == "💾 Ctrl+X+Y" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18Y\n')
-        await update.message.reply_text(f"Ctrl+X+Y {CTRL_SENT} ({SAVE_EXIT})", reply_markup=get_keyboard())
-    elif text == CTRL_X_N_BTN and chat_id in sessions:
+        await update.message.reply_text("Ctrl+X+Y sent (save & exit)", reply_markup=get_keyboard())
+    elif text == "🚫 Ctrl+X+N" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18N\n')
-        await update.message.reply_text(f"Ctrl+X+N {CTRL_SENT} ({CANCEL})", reply_markup=get_keyboard())
-    elif text == CLEAR_BTN and chat_id in sessions:
+        await update.message.reply_text("Ctrl+X+N sent (cancel)", reply_markup=get_keyboard())
+    elif text == "🧹 Clear File" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x01')
         time.sleep(0.1)
         sessions[chat_id]["channel"].send(b'\x7f')
-        await update.message.reply_text(CLEAR_MSG, reply_markup=get_keyboard())
-    elif text == UPLOAD_BTN:
+        await update.message.reply_text("File content cleared", reply_markup=get_keyboard())
+    elif text == "📤 Upload & Paste":
         context.user_data['awaiting_upload'] = True
-        await update.message.reply_text(UPLOAD_MSG, reply_markup=get_keyboard())
-    elif text == LAST_50_BTN and chat_id in sessions:
+        await update.message.reply_text("Send a .txt file to paste in terminal", reply_markup=get_keyboard())
+    elif text == "🔁 Last 50 Lines" and chat_id in sessions:
         sessions[chat_id]["channel"].send("history | tail -50\n")
-        await update.message.reply_text(f"{SENDING_LINES} 50...", reply_markup=get_keyboard())
-    elif text == LAST_100_BTN and chat_id in sessions:
+        await update.message.reply_text("Sending last 50 lines...", reply_markup=get_keyboard())
+    elif text == "🔁 Last 100 Lines" and chat_id in sessions:
         sessions[chat_id]["channel"].send("history | tail -100\n")
-        await update.message.reply_text(f"{SENDING_LINES} 100...", reply_markup=get_keyboard())
-    elif text == ENTER_BTN and chat_id in sessions:
+        await update.message.reply_text("Sending last 100 lines...", reply_markup=get_keyboard())
+    elif text == "⏎ Enter" and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\n')
-        await update.message.reply_text(ENTER_SENT, reply_markup=get_keyboard())
-    elif text == HELP_BTN:
-        await update.message.reply_text(HELP_TEXT, reply_markup=get_keyboard())
-    elif text == RECONNECT_BTN:
+        await update.message.reply_text("Enter sent", reply_markup=get_keyboard())
+    elif text == "📋 Help":
+        await update.message.reply_text(
+            "Commands:\n"
+            "Connect - SSH connection\n"
+            "Ctrl+C - Interrupt\n"
+            "Ctrl+D - Exit shell\n"
+            "Ctrl+X - Exit editors\n"
+            "Upload & Paste - Send text file\n"
+            "Last Lines - Show history",
+            reply_markup=get_keyboard()
+        )
+    elif text == "🔄 Reconnect":
         if chat_id in sessions:
             sessions[chat_id]["channel"].close()
             sessions[chat_id]["ssh"].close()
             del sessions[chat_id]
             time.sleep(1)
         user_steps[chat_id] = {"step": "host"}
-        await update.message.reply_text(RECONNECT_MSG, reply_markup=get_keyboard())
-    elif text == DEV_BTN:
-        await update.message.reply_text(DEV_TEXT, reply_markup=get_keyboard())
+        await update.message.reply_text("Reconnecting...\nEnter server IP:", reply_markup=get_keyboard())
     elif chat_id in user_steps:
         step = user_steps[chat_id].get("step")
         if step == "host":
             user_steps[chat_id]["host"] = text
             user_steps[chat_id]["step"] = "port"
-            await update.message.reply_text(PORT_PROMPT, reply_markup=get_keyboard())
+            await update.message.reply_text("Enter SSH port (default 22):", reply_markup=get_keyboard())
         elif step == "port":
             port = int(text) if text.isdigit() else 22
             user_steps[chat_id]["port"] = port
             user_steps[chat_id]["step"] = "username"
-            await update.message.reply_text(USERNAME_PROMPT, reply_markup=get_keyboard())
+            await update.message.reply_text("Enter username:", reply_markup=get_keyboard())
         elif step == "username":
             user_steps[chat_id]["username"] = text
             user_steps[chat_id]["step"] = "password"
-            await update.message.reply_text(PASSWORD_PROMPT, reply_markup=get_keyboard())
+            await update.message.reply_text("Enter password:", reply_markup=get_keyboard())
         elif step == "password":
-            password = text
-            if text.startswith('@') or "'" in text or '"' in text:
-                password = f"'{text}'"
-            user_steps[chat_id]["password"] = password
             await do_ssh_connect(update, context, chat_id, user_steps[chat_id])
             del user_steps[chat_id]
     elif chat_id in sessions:
@@ -309,7 +183,7 @@ async def handle_text(update, context):
         log_session(chat_id, f"CMD: {text}")
         await update.message.reply_text(f"Command sent: {text}", reply_markup=get_keyboard())
     else:
-        await update.message.reply_text(PRESS_CONNECT, reply_markup=get_keyboard())
+        await update.message.reply_text("Press Connect button first", reply_markup=get_keyboard())
 
 async def do_ssh_connect(update, context, chat_id, data):
     try:
@@ -342,11 +216,11 @@ async def do_ssh_connect(update, context, chat_id, data):
                 time.sleep(0.1)
 
         threading.Thread(target=reader, daemon=True).start()
-        await update.message.reply_text(f"{CONNECTED_MSG} {data['username']}@{data['host']}", reply_markup=get_keyboard())
+        await update.message.reply_text(f"Connected to {data['username']}@{data['host']}", reply_markup=get_keyboard())
         channel.send("\n")
         log_session(chat_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
-        await update.message.reply_text(f"{CONNECTION_FAILED} {str(e)}", reply_markup=get_keyboard())
+        await update.message.reply_text(f"Connection failed: {str(e)}", reply_markup=get_keyboard())
 
 async def handle_document(update, context):
     chat_id = update.effective_chat.id
@@ -361,12 +235,10 @@ async def handle_document(update, context):
             for char in content:
                 channel.send(char)
                 await asyncio.sleep(0.002)
-            await update.message.reply_text(PASTED_MSG, reply_markup=get_keyboard())
+            await update.message.reply_text("File content pasted in terminal", reply_markup=get_keyboard())
             context.user_data['awaiting_upload'] = False
         else:
-            await update.message.reply_text(ONLY_TXT, reply_markup=get_keyboard())
-    else:
-        await update.message.reply_text(CONNECT_FIRST, reply_markup=get_keyboard())
+            await update.message.reply_text("Only .txt files are accepted", reply_markup=get_keyboard())
 
 def main():
     app = Application.builder().token(TOKEN).build()
@@ -379,6 +251,9 @@ def main():
 if __name__ == "__main__":
     main()
 TELEGRAMCODE
+
+    sed -i "s/REPLACE_TOKEN/$TELEGRAM_TOKEN/" telegram/bot.py
+    sed -i "s/REPLACE_USER_ID/$TELEGRAM_USER_ID/" telegram/bot.py
 
     cat > telegram/requirements.txt << 'TELREQ'
 python-telegram-bot==20.7
@@ -421,7 +296,7 @@ if [[ $choice == "2" || $choice == "3" ]]; then
     read -p "Enter your numeric Bale User ID: " BALE_USER_ID
     
     mkdir -p bale
-    cat > bale/bot.py << BALECODE
+    cat > bale/bot.py << 'BALECODE'
 #!/usr/bin/env python3
 
 import threading
@@ -433,50 +308,9 @@ import json
 import requests
 from datetime import datetime
 
-TOKEN = "$BALE_TOKEN"
+TOKEN = "REPLACE_TOKEN"
 API_URL = f"https://tapi.bale.ai/bot{TOKEN}/"
-ALLOWED_IDS = [$BALE_USER_ID]
-
-CONNECT_BTN = "$CONNECT_BTN"
-DISCONNECT_BTN = "$DISCONNECT_BTN"
-CTRL_C_BTN = "$CTRL_C_BTN"
-CTRL_D_BTN = "$CTRL_D_BTN"
-CTRL_X_BTN = "$CTRL_X_BTN"
-CTRL_X_Y_BTN = "$CTRL_X_Y_BTN"
-CTRL_X_N_BTN = "$CTRL_X_N_BTN"
-CLEAR_BTN = "$CLEAR_BTN"
-UPLOAD_BTN = "$UPLOAD_BTN"
-LAST_50_BTN = "$LAST_50_BTN"
-LAST_100_BTN = "$LAST_100_BTN"
-ENTER_BTN = "$ENTER_BTN"
-HELP_BTN = "$HELP_BTN"
-RECONNECT_BTN = "$RECONNECT_BTN"
-DEV_BTN = "$DEV_BTN"
-
-START_MSG = "$START_MSG"
-CONNECT_PROMPT = "$CONNECT_PROMPT"
-PORT_PROMPT = "$PORT_PROMPT"
-USERNAME_PROMPT = "$USERNAME_PROMPT"
-PASSWORD_PROMPT = "$PASSWORD_PROMPT"
-CONNECTED_MSG = "$CONNECTED_MSG"
-CONNECTION_FAILED = "$CONNECTION_FAILED"
-SESSION_CLOSED = "$SESSION_CLOSED"
-NO_SESSION = "$NO_SESSION"
-CTRL_SENT = "$CTRL_SENT"
-SAVE_EXIT = "$SAVE_EXIT"
-CANCEL = "$CANCEL"
-CLEAR_MSG = "$CLEAR_MSG"
-UPLOAD_MSG = "$UPLOAD_MSG"
-PASTED_MSG = "$PASTED_MSG"
-SENDING_LINES = "$SENDING_LINES"
-ENTER_SENT = "$ENTER_SENT"
-RECONNECT_MSG = "$RECONNECT_MSG"
-ACCESS_DENIED = "$ACCESS_DENIED"
-PRESS_CONNECT = "$PRESS_CONNECT"
-ONLY_TXT = "$ONLY_TXT"
-CONNECT_FIRST = "$CONNECT_FIRST"
-HELP_TEXT = "$HELP_TEXT"
-DEV_TEXT = "$DEV_TEXT"
+ALLOWED_IDS = [REPLACE_USER_ID]
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -495,14 +329,13 @@ def clean_ansi(text):
 def get_keyboard():
     return {
         "keyboard": [
-            [CONNECT_BTN, DISCONNECT_BTN],
-            [CTRL_C_BTN, CTRL_D_BTN],
-            [CTRL_X_BTN, CTRL_X_Y_BTN],
-            [CTRL_X_N_BTN, CLEAR_BTN],
-            [UPLOAD_BTN, LAST_50_BTN],
-            [LAST_100_BTN, ENTER_BTN],
-            [HELP_BTN, RECONNECT_BTN],
-            [DEV_BTN]
+            ["🔌 Connect", "❌ Disconnect"],
+            ["⛔ Ctrl+C", "🔚 Ctrl+D"],
+            ["💾 Ctrl+X", "💾 Ctrl+X+Y"],
+            ["🚫 Ctrl+X+N", "🧹 Clear File"],
+            ["📤 Upload & Paste", "🔁 Last 50 Lines"],
+            ["🔁 Last 100 Lines", "⏎ Enter"],
+            ["📋 Help", "🔄 Reconnect"]
         ],
         "resize_keyboard": True
     }
@@ -544,90 +377,84 @@ def do_ssh_connect(chat_id, user_id, data):
                 time.sleep(0.1)
 
         threading.Thread(target=reader, daemon=True).start()
-        send_message(chat_id, f"{CONNECTED_MSG} {data['username']}@{data['host']}", get_keyboard())
+        send_message(chat_id, f"Connected to {data['username']}@{data['host']}", get_keyboard())
         channel.send("\n")
         log_session(user_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
-        send_message(chat_id, f"{CONNECTION_FAILED} {str(e)}", get_keyboard())
+        send_message(chat_id, f"Connection failed: {str(e)}", get_keyboard())
 
 def process_message(chat_id, user_id, text):
-    if text == CONNECT_BTN:
+    if text == "🔌 Connect":
         user_steps[user_id] = {"step": "host"}
-        send_message(chat_id, CONNECT_PROMPT, get_keyboard())
-    elif text == DISCONNECT_BTN:
+        send_message(chat_id, "Enter server IP or hostname:", get_keyboard())
+    elif text == "❌ Disconnect":
         if user_id in sessions:
             sessions[user_id]["channel"].close()
             sessions[user_id]["ssh"].close()
             del sessions[user_id]
-            send_message(chat_id, SESSION_CLOSED, get_keyboard())
-        else:
-            send_message(chat_id, NO_SESSION, get_keyboard())
-    elif text == CTRL_C_BTN and user_id in sessions:
+            send_message(chat_id, "SSH session closed", get_keyboard())
+    elif text == "⛔ Ctrl+C" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x03')
-        send_message(chat_id, f"Ctrl+C {CTRL_SENT}", get_keyboard())
-    elif text == CTRL_D_BTN and user_id in sessions:
+        send_message(chat_id, "Ctrl+C sent", get_keyboard())
+    elif text == "🔚 Ctrl+D" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x04')
-        send_message(chat_id, f"Ctrl+D {CTRL_SENT}", get_keyboard())
-    elif text == CTRL_X_BTN and user_id in sessions:
+        send_message(chat_id, "Ctrl+D sent", get_keyboard())
+    elif text == "💾 Ctrl+X" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18')
-        send_message(chat_id, f"Ctrl+X {CTRL_SENT}", get_keyboard())
-    elif text == CTRL_X_Y_BTN and user_id in sessions:
+        send_message(chat_id, "Ctrl+X sent", get_keyboard())
+    elif text == "💾 Ctrl+X+Y" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18Y\n')
-        send_message(chat_id, f"Ctrl+X+Y {CTRL_SENT} ({SAVE_EXIT})", get_keyboard())
-    elif text == CTRL_X_N_BTN and user_id in sessions:
+        send_message(chat_id, "Ctrl+X+Y sent (save & exit)", get_keyboard())
+    elif text == "🚫 Ctrl+X+N" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18N\n')
-        send_message(chat_id, f"Ctrl+X+N {CTRL_SENT} ({CANCEL})", get_keyboard())
-    elif text == CLEAR_BTN and user_id in sessions:
+        send_message(chat_id, "Ctrl+X+N sent (cancel)", get_keyboard())
+    elif text == "🧹 Clear File" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x01')
         time.sleep(0.1)
         sessions[user_id]["channel"].send(b'\x7f')
-        send_message(chat_id, CLEAR_MSG, get_keyboard())
-    elif text == UPLOAD_BTN:
+        send_message(chat_id, "File content cleared", get_keyboard())
+    elif text == "📤 Upload & Paste":
         user_steps[user_id] = {"step": "awaiting_upload"}
-        send_message(chat_id, UPLOAD_MSG, get_keyboard())
-    elif text == LAST_50_BTN and user_id in sessions:
+        send_message(chat_id, "Send a .txt file to paste in terminal", get_keyboard())
+    elif text == "🔁 Last 50 Lines" and user_id in sessions:
         sessions[user_id]["channel"].send("history | tail -50\n")
-        send_message(chat_id, f"{SENDING_LINES} 50...", get_keyboard())
-    elif text == LAST_100_BTN and user_id in sessions:
+        send_message(chat_id, "Sending last 50 lines...", get_keyboard())
+    elif text == "🔁 Last 100 Lines" and user_id in sessions:
         sessions[user_id]["channel"].send("history | tail -100\n")
-        send_message(chat_id, f"{SENDING_LINES} 100...", get_keyboard())
-    elif text == ENTER_BTN and user_id in sessions:
+        send_message(chat_id, "Sending last 100 lines...", get_keyboard())
+    elif text == "⏎ Enter" and user_id in sessions:
         sessions[user_id]["channel"].send(b'\n')
-        send_message(chat_id, ENTER_SENT, get_keyboard())
-    elif text == HELP_BTN:
-        send_message(chat_id, HELP_TEXT, get_keyboard())
-    elif text == RECONNECT_BTN:
+        send_message(chat_id, "Enter sent", get_keyboard())
+    elif text == "📋 Help":
+        send_message(chat_id, 
+            "Commands:\nConnect - SSH connection\nCtrl+C - Interrupt\nCtrl+D - Exit shell\nUpload & Paste - Send text file\nLast Lines - Show history",
+            get_keyboard())
+    elif text == "🔄 Reconnect":
         if user_id in sessions:
             sessions[user_id]["channel"].close()
             sessions[user_id]["ssh"].close()
             del sessions[user_id]
             time.sleep(1)
         user_steps[user_id] = {"step": "host"}
-        send_message(chat_id, RECONNECT_MSG, get_keyboard())
-    elif text == DEV_BTN:
-        send_message(chat_id, DEV_TEXT, get_keyboard())
+        send_message(chat_id, "Reconnecting...\nEnter server IP:", get_keyboard())
     elif text == "/start":
-        send_message(chat_id, START_MSG, get_keyboard())
+        send_message(chat_id, "🤖 SSH Terminal Bot for Bale\nUse buttons below to connect", get_keyboard())
     elif user_id in user_steps:
         step = user_steps[user_id].get("step")
         if step == "host":
             user_steps[user_id]["host"] = text
             user_steps[user_id]["step"] = "port"
-            send_message(chat_id, PORT_PROMPT, get_keyboard())
+            send_message(chat_id, "Enter SSH port (default 22):", get_keyboard())
         elif step == "port":
             port = int(text) if text.isdigit() else 22
             user_steps[user_id]["port"] = port
             user_steps[user_id]["step"] = "username"
-            send_message(chat_id, USERNAME_PROMPT, get_keyboard())
+            send_message(chat_id, "Enter username:", get_keyboard())
         elif step == "username":
             user_steps[user_id]["username"] = text
             user_steps[user_id]["step"] = "password"
-            send_message(chat_id, PASSWORD_PROMPT, get_keyboard())
+            send_message(chat_id, "Enter password:", get_keyboard())
         elif step == "password":
-            password = text
-            if text.startswith('@') or "'" in text or '"' in text:
-                password = f"'{text}'"
-            user_steps[user_id]["password"] = password
             do_ssh_connect(chat_id, user_id, user_steps[user_id])
             del user_steps[user_id]
     elif user_id in sessions:
@@ -635,7 +462,7 @@ def process_message(chat_id, user_id, text):
         log_session(user_id, f"CMD: {text}")
         send_message(chat_id, f"Command sent: {text}", get_keyboard())
     else:
-        send_message(chat_id, PRESS_CONNECT, get_keyboard())
+        send_message(chat_id, "Press Connect button first", get_keyboard())
 
 def process_document(chat_id, user_id, file_id):
     if user_id in user_steps and user_steps[user_id].get("step") == "awaiting_upload":
@@ -650,12 +477,12 @@ def process_document(chat_id, user_id, file_id):
                     for char in content:
                         channel.send(char)
                         time.sleep(0.002)
-                    send_message(chat_id, PASTED_MSG, get_keyboard())
+                    send_message(chat_id, "File content pasted in terminal", get_keyboard())
                 else:
-                    send_message(chat_id, CONNECT_FIRST, get_keyboard())
+                    send_message(chat_id, "Connect to SSH first", get_keyboard())
         del user_steps[user_id]
     else:
-        send_message(chat_id, PRESS_CONNECT, get_keyboard())
+        send_message(chat_id, "Press Upload & Paste button first", get_keyboard())
 
 def get_updates():
     global last_update_id
@@ -670,7 +497,7 @@ def get_updates():
                     chat_id = msg['chat']['id']
                     user_id = msg['from']['id']
                     if user_id not in ALLOWED_IDS:
-                        send_message(chat_id, ACCESS_DENIED)
+                        send_message(chat_id, "Access denied")
                         continue
                     if 'document' in msg:
                         process_document(chat_id, user_id, msg['document']['file_id'])
@@ -691,6 +518,9 @@ def main():
 if __name__ == "__main__":
     main()
 BALECODE
+
+    sed -i "s/REPLACE_TOKEN/$BALE_TOKEN/" bale/bot.py
+    sed -i "s/REPLACE_USER_ID/$BALE_USER_ID/" bale/bot.py
 
     cat > bale/requirements.txt << 'BALEREQ'
 paramiko==3.4.0
@@ -730,4 +560,3 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Installation completed!${NC}"
 echo -e "${GREEN}Check status with: systemctl status telegram-ssh-bot${NC}"
 echo -e "${GREEN}                 or: systemctl status bale-ssh-bot${NC}"
-echo -e "${GREEN}Bot language: $([ $lang_choice == "1" ] && echo "Persian" || echo "English")${NC}"
