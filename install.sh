@@ -3,6 +3,7 @@
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
 clear
@@ -21,6 +22,17 @@ read -p "Enter your choice [1-3]: " choice
 if [[ $choice -lt 1 || $choice -gt 3 ]]; then
     echo -e "${RED}Invalid choice${NC}"
     exit 1
+fi
+
+echo -e "${YELLOW}Select bot language:${NC}"
+echo "1) Persian (فارسی)"
+echo "2) English"
+read -p "Enter your choice [1-2]: " lang_choice
+
+if [[ $lang_choice == "1" ]]; then
+    LANG="fa"
+else
+    LANG="en"
 fi
 
 apt update
@@ -51,7 +63,8 @@ from datetime import datetime
 import os
 
 TOKEN = "REPLACE_TOKEN"
-ALLOWED_IDS = [REPLACE_USER_ID]
+ALLOWED_IDS = [int(REPLACE_USER_ID)]
+BOT_LANG = "REPLACE_LANG"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -66,26 +79,61 @@ def log_session(chat_id, message):
 def clean_ansi(text):
     return re.sub(r'\x1B\[[0-?]*[ -/]*[@-~]', '', text)
 
+def get_text(key):
+    texts = {
+        "connect_btn": {"fa": "🔌 اتصال", "en": "🔌 Connect"},
+        "disconnect_btn": {"fa": "❌ قطع اتصال", "en": "❌ Disconnect"},
+        "ctrl_c_btn": {"fa": "⛔ Ctrl+C", "en": "⛔ Ctrl+C"},
+        "ctrl_d_btn": {"fa": "🔚 Ctrl+D", "en": "🔚 Ctrl+D"},
+        "ctrl_x_btn": {"fa": "💾 Ctrl+X", "en": "💾 Ctrl+X"},
+        "ctrl_xy_btn": {"fa": "💾 Ctrl+X+Y", "en": "💾 Ctrl+X+Y"},
+        "ctrl_xn_btn": {"fa": "🚫 Ctrl+X+N", "en": "🚫 Ctrl+X+N"},
+        "clear_btn": {"fa": "🧹 پاک کردن فایل", "en": "🧹 Clear File"},
+        "upload_btn": {"fa": "📤 آپلود و پیست", "en": "📤 Upload & Paste"},
+        "last50_btn": {"fa": "🔁 50 خط آخر", "en": "🔁 Last 50 Lines"},
+        "last100_btn": {"fa": "🔁 100 خط آخر", "en": "🔁 Last 100 Lines"},
+        "enter_btn": {"fa": "⏎ Enter", "en": "⏎ Enter"},
+        "help_btn": {"fa": "📋 راهنما", "en": "📋 Help"},
+        "reconnect_btn": {"fa": "🔄 reconnect", "en": "🔄 Reconnect"},
+        "dev_btn": {"fa": "👨‍💻 توسعه دهنده", "en": "👨‍💻 Developer"},
+        "access_denied": {"fa": "⛔ شما دسترسی ندارید", "en": "⛔ Access denied"},
+        "welcome": {"fa": "🤖 ربات ترمینال SSH\nاز دکمه‌های زیر استفاده کن", "en": "🤖 SSH Terminal Bot\nUse buttons below"},
+        "enter_host": {"fa": "آدرس IP یا هاست سرور را وارد کن:", "en": "Enter server IP or hostname:"},
+        "enter_port": {"fa": "پورت SSH (پیش‌فرض 22):", "en": "Enter SSH port (default 22):"},
+        "enter_user": {"fa": "نام کاربری:", "en": "Enter username:"},
+        "enter_pass": {"fa": "رمز عبور:", "en": "Enter password:"},
+        "connected": {"fa": "✅ متصل شدی به {user}@{host}", "en": "✅ Connected to {user}@{host}"},
+        "conn_failed": {"fa": "❌ خطا در اتصال: {error}", "en": "❌ Connection failed: {error}"},
+        "session_closed": {"fa": "🔌 جلسه SSH بسته شد", "en": "🔌 SSH session closed"},
+        "ctrl_sent": {"fa": "ارسال شد", "en": "sent"},
+        "file_cleared": {"fa": "🧹 تمام کدهای فایل پاک شد", "en": "🧹 File content cleared"},
+        "send_txt": {"fa": "📄 یه فایل txt بفرست تا تو ترمینال پیست کنم", "en": "📄 Send a .txt file to paste in terminal"},
+        "pasted": {"fa": "✅ محتوای فایل در ترمینال پیست شد", "en": "✅ File content pasted in terminal"},
+        "only_txt": {"fa": "فقط فایل txt قبوله", "en": "Only .txt files are accepted"},
+        "cmd_sent": {"fa": "📤 دستور ارسال شد: {cmd}", "en": "📤 Command sent: {cmd}"},
+        "press_connect": {"fa": "اول دکمه اتصال رو بزن", "en": "Press Connect button first"},
+        "dev_info": {"fa": "👨‍💻 توسعه دهنده:\nتلگرام: @Aria_qi\nبله: @aria_qi\nگیت‌هاب: github.com/ariaghasemi", "en": "👨‍💻 Developer:\nTelegram: @Aria_qi\nBale: @aria_qi\nGitHub: github.com/ariaghasemi"}
+    }
+    return texts.get(key, {}).get(BOT_LANG, texts.get(key, {}).get("en", key))
+
 def get_keyboard():
     keys = [
-        ["🔌 Connect", "❌ Disconnect"],
-        ["⛔ Ctrl+C", "🔚 Ctrl+D"],
-        ["💾 Ctrl+X", "💾 Ctrl+X+Y"],
-        ["🚫 Ctrl+X+N", "🧹 Clear File"],
-        ["📤 Upload & Paste", "🔁 Last 50 Lines"],
-        ["🔁 Last 100 Lines", "⏎ Enter"],
-        ["📋 Help", "🔄 Reconnect"]
+        [get_text("connect_btn"), get_text("disconnect_btn")],
+        [get_text("ctrl_c_btn"), get_text("ctrl_d_btn")],
+        [get_text("ctrl_x_btn"), get_text("ctrl_xy_btn")],
+        [get_text("ctrl_xn_btn"), get_text("clear_btn")],
+        [get_text("upload_btn"), get_text("last50_btn")],
+        [get_text("last100_btn"), get_text("enter_btn")],
+        [get_text("help_btn"), get_text("reconnect_btn")],
+        [get_text("dev_btn")]
     ]
     return ReplyKeyboardMarkup(keys, resize_keyboard=True)
 
 async def start(update, context):
     if update.effective_chat.id not in ALLOWED_IDS:
-        await update.message.reply_text("Access denied")
+        await update.message.reply_text(get_text("access_denied"))
         return
-    await update.message.reply_text(
-        "🤖 SSH Terminal Bot\nUse buttons below to connect",
-        reply_markup=get_keyboard()
-    )
+    await update.message.reply_text(get_text("welcome"), reply_markup=get_keyboard())
 
 async def handle_text(update, context):
     chat_id = update.effective_chat.id
@@ -94,90 +142,93 @@ async def handle_text(update, context):
     if chat_id not in ALLOWED_IDS:
         return
 
-    if text == "🔌 Connect":
+    # Developer button
+    if text == get_text("dev_btn"):
+        await update.message.reply_text(get_text("dev_info"), reply_markup=get_keyboard())
+        return
+
+    if text == get_text("connect_btn"):
         user_steps[chat_id] = {"step": "host"}
-        await update.message.reply_text("Enter server IP or hostname:", reply_markup=get_keyboard())
-    elif text == "❌ Disconnect":
+        await update.message.reply_text(get_text("enter_host"), reply_markup=get_keyboard())
+    elif text == get_text("disconnect_btn"):
         if chat_id in sessions:
             sessions[chat_id]["channel"].close()
             sessions[chat_id]["ssh"].close()
             del sessions[chat_id]
-            await update.message.reply_text("SSH session closed", reply_markup=get_keyboard())
-    elif text == "⛔ Ctrl+C" and chat_id in sessions:
+            await update.message.reply_text(get_text("session_closed"), reply_markup=get_keyboard())
+    elif text == get_text("ctrl_c_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x03')
-        await update.message.reply_text("Ctrl+C sent", reply_markup=get_keyboard())
-    elif text == "🔚 Ctrl+D" and chat_id in sessions:
+        await update.message.reply_text(f"Ctrl+C {get_text('ctrl_sent')}", reply_markup=get_keyboard())
+    elif text == get_text("ctrl_d_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x04')
-        await update.message.reply_text("Ctrl+D sent", reply_markup=get_keyboard())
-    elif text == "💾 Ctrl+X" and chat_id in sessions:
+        await update.message.reply_text(f"Ctrl+D {get_text('ctrl_sent')}", reply_markup=get_keyboard())
+    elif text == get_text("ctrl_x_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18')
-        await update.message.reply_text("Ctrl+X sent", reply_markup=get_keyboard())
-    elif text == "💾 Ctrl+X+Y" and chat_id in sessions:
+        await update.message.reply_text(f"Ctrl+X {get_text('ctrl_sent')}", reply_markup=get_keyboard())
+    elif text == get_text("ctrl_xy_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18Y\n')
-        await update.message.reply_text("Ctrl+X+Y sent (save & exit)", reply_markup=get_keyboard())
-    elif text == "🚫 Ctrl+X+N" and chat_id in sessions:
+        await update.message.reply_text(f"Ctrl+X+Y {get_text('ctrl_sent')} (save & exit)", reply_markup=get_keyboard())
+    elif text == get_text("ctrl_xn_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x18N\n')
-        await update.message.reply_text("Ctrl+X+N sent (cancel)", reply_markup=get_keyboard())
-    elif text == "🧹 Clear File" and chat_id in sessions:
+        await update.message.reply_text(f"Ctrl+X+N {get_text('ctrl_sent')} (cancel)", reply_markup=get_keyboard())
+    elif text == get_text("clear_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\x01')
         time.sleep(0.1)
         sessions[chat_id]["channel"].send(b'\x7f')
-        await update.message.reply_text("File content cleared", reply_markup=get_keyboard())
-    elif text == "📤 Upload & Paste":
+        await update.message.reply_text(get_text("file_cleared"), reply_markup=get_keyboard())
+    elif text == get_text("upload_btn"):
         context.user_data['awaiting_upload'] = True
-        await update.message.reply_text("Send a .txt file to paste in terminal", reply_markup=get_keyboard())
-    elif text == "🔁 Last 50 Lines" and chat_id in sessions:
+        await update.message.reply_text(get_text("send_txt"), reply_markup=get_keyboard())
+    elif text == get_text("last50_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send("history | tail -50\n")
-        await update.message.reply_text("Sending last 50 lines...", reply_markup=get_keyboard())
-    elif text == "🔁 Last 100 Lines" and chat_id in sessions:
+        await update.message.reply_text(get_text("last50_btn"), reply_markup=get_keyboard())
+    elif text == get_text("last100_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send("history | tail -100\n")
-        await update.message.reply_text("Sending last 100 lines...", reply_markup=get_keyboard())
-    elif text == "⏎ Enter" and chat_id in sessions:
+        await update.message.reply_text(get_text("last100_btn"), reply_markup=get_keyboard())
+    elif text == get_text("enter_btn") and chat_id in sessions:
         sessions[chat_id]["channel"].send(b'\n')
-        await update.message.reply_text("Enter sent", reply_markup=get_keyboard())
-    elif text == "📋 Help":
+        await update.message.reply_text(f"Enter {get_text('ctrl_sent')}", reply_markup=get_keyboard())
+    elif text == get_text("help_btn"):
         await update.message.reply_text(
-            "Commands:\n"
-            "Connect - SSH connection\n"
-            "Ctrl+C - Interrupt\n"
-            "Ctrl+D - Exit shell\n"
-            "Ctrl+X - Exit editors\n"
-            "Upload & Paste - Send text file\n"
-            "Last Lines - Show history",
+            get_text("welcome") + "\n\n" +
+            get_text("connect_btn") + " - SSH " + get_text("connect_btn") + "\n" +
+            get_text("ctrl_c_btn") + " - " + get_text("ctrl_c_btn") + "\n" +
+            get_text("ctrl_d_btn") + " - " + get_text("ctrl_d_btn") + "\n" +
+            get_text("upload_btn") + " - " + get_text("upload_btn"),
             reply_markup=get_keyboard()
         )
-    elif text == "🔄 Reconnect":
+    elif text == get_text("reconnect_btn"):
         if chat_id in sessions:
             sessions[chat_id]["channel"].close()
             sessions[chat_id]["ssh"].close()
             del sessions[chat_id]
             time.sleep(1)
         user_steps[chat_id] = {"step": "host"}
-        await update.message.reply_text("Reconnecting...\nEnter server IP:", reply_markup=get_keyboard())
+        await update.message.reply_text(get_text("enter_host"), reply_markup=get_keyboard())
     elif chat_id in user_steps:
         step = user_steps[chat_id].get("step")
         if step == "host":
             user_steps[chat_id]["host"] = text
             user_steps[chat_id]["step"] = "port"
-            await update.message.reply_text("Enter SSH port (default 22):", reply_markup=get_keyboard())
+            await update.message.reply_text(get_text("enter_port"), reply_markup=get_keyboard())
         elif step == "port":
             port = int(text) if text.isdigit() else 22
             user_steps[chat_id]["port"] = port
             user_steps[chat_id]["step"] = "username"
-            await update.message.reply_text("Enter username:", reply_markup=get_keyboard())
+            await update.message.reply_text(get_text("enter_user"), reply_markup=get_keyboard())
         elif step == "username":
             user_steps[chat_id]["username"] = text
             user_steps[chat_id]["step"] = "password"
-            await update.message.reply_text("Enter password:", reply_markup=get_keyboard())
+            await update.message.reply_text(get_text("enter_pass"), reply_markup=get_keyboard())
         elif step == "password":
             await do_ssh_connect(update, context, chat_id, user_steps[chat_id])
             del user_steps[chat_id]
     elif chat_id in sessions:
         sessions[chat_id]["channel"].send(text + "\n")
         log_session(chat_id, f"CMD: {text}")
-        await update.message.reply_text(f"Command sent: {text}", reply_markup=get_keyboard())
+        await update.message.reply_text(get_text("cmd_sent").format(cmd=text), reply_markup=get_keyboard())
     else:
-        await update.message.reply_text("Press Connect button first", reply_markup=get_keyboard())
+        await update.message.reply_text(get_text("press_connect"), reply_markup=get_keyboard())
 
 async def do_ssh_connect(update, context, chat_id, data):
     try:
@@ -187,7 +238,7 @@ async def do_ssh_connect(update, context, chat_id, data):
             hostname=data["host"],
             port=data["port"],
             username=data["username"],
-            password=data["password"],
+            password=str(data["password"]),
             timeout=10
         )
         channel = client.invoke_shell(term='xterm', width=120, height=40)
@@ -210,11 +261,11 @@ async def do_ssh_connect(update, context, chat_id, data):
                 time.sleep(0.1)
 
         threading.Thread(target=reader, daemon=True).start()
-        await update.message.reply_text(f"Connected to {data['username']}@{data['host']}", reply_markup=get_keyboard())
+        await update.message.reply_text(get_text("connected").format(user=data["username"], host=data["host"]), reply_markup=get_keyboard())
         channel.send("\n")
         log_session(chat_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
-        await update.message.reply_text(f"Connection failed: {str(e)}", reply_markup=get_keyboard())
+        await update.message.reply_text(get_text("conn_failed").format(error=str(e)), reply_markup=get_keyboard())
 
 async def handle_document(update, context):
     chat_id = update.effective_chat.id
@@ -229,10 +280,10 @@ async def handle_document(update, context):
             for char in content:
                 channel.send(char)
                 await asyncio.sleep(0.002)
-            await update.message.reply_text("File content pasted in terminal", reply_markup=get_keyboard())
+            await update.message.reply_text(get_text("pasted"), reply_markup=get_keyboard())
             context.user_data['awaiting_upload'] = False
         else:
-            await update.message.reply_text("Only .txt files are accepted", reply_markup=get_keyboard())
+            await update.message.reply_text(get_text("only_txt"), reply_markup=get_keyboard())
 
 def main():
     app = Application.builder().token(TOKEN).build()
@@ -248,6 +299,7 @@ TELEGRAMCODE
 
     sed -i "s/REPLACE_TOKEN/$TELEGRAM_TOKEN/" telegram/bot.py
     sed -i "s/REPLACE_USER_ID/$TELEGRAM_USER_ID/" telegram/bot.py
+    sed -i "s/REPLACE_LANG/$LANG/" telegram/bot.py
 
     cat > telegram/requirements.txt << 'TELREQ'
 python-telegram-bot==20.7
@@ -304,7 +356,8 @@ from datetime import datetime
 
 TOKEN = "REPLACE_TOKEN"
 API_URL = f"https://tapi.bale.ai/bot{TOKEN}/"
-ALLOWED_IDS = [REPLACE_USER_ID]
+ALLOWED_IDS = [int(REPLACE_USER_ID)]
+BOT_LANG = "REPLACE_LANG"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -320,16 +373,54 @@ def log_session(user_id, message):
 def clean_ansi(text):
     return re.sub(r'\x1B\[[0-?]*[ -/]*[@-~]', '', text)
 
+def get_text(key):
+    texts = {
+        "connect_btn": {"fa": "🔌 اتصال", "en": "🔌 Connect"},
+        "disconnect_btn": {"fa": "❌ قطع اتصال", "en": "❌ Disconnect"},
+        "ctrl_c_btn": {"fa": "⛔ Ctrl+C", "en": "⛔ Ctrl+C"},
+        "ctrl_d_btn": {"fa": "🔚 Ctrl+D", "en": "🔚 Ctrl+D"},
+        "ctrl_x_btn": {"fa": "💾 Ctrl+X", "en": "💾 Ctrl+X"},
+        "ctrl_xy_btn": {"fa": "💾 Ctrl+X+Y", "en": "💾 Ctrl+X+Y"},
+        "ctrl_xn_btn": {"fa": "🚫 Ctrl+X+N", "en": "🚫 Ctrl+X+N"},
+        "clear_btn": {"fa": "🧹 پاک کردن فایل", "en": "🧹 Clear File"},
+        "upload_btn": {"fa": "📤 آپلود و پیست", "en": "📤 Upload & Paste"},
+        "last50_btn": {"fa": "🔁 50 خط آخر", "en": "🔁 Last 50 Lines"},
+        "last100_btn": {"fa": "🔁 100 خط آخر", "en": "🔁 Last 100 Lines"},
+        "enter_btn": {"fa": "⏎ Enter", "en": "⏎ Enter"},
+        "help_btn": {"fa": "📋 راهنما", "en": "📋 Help"},
+        "reconnect_btn": {"fa": "🔄 reconnect", "en": "🔄 Reconnect"},
+        "dev_btn": {"fa": "👨‍💻 توسعه دهنده", "en": "👨‍💻 Developer"},
+        "access_denied": {"fa": "⛔ شما دسترسی ندارید", "en": "⛔ Access denied"},
+        "welcome": {"fa": "🤖 ربات ترمینال SSH\nاز دکمه‌های زیر استفاده کن", "en": "🤖 SSH Terminal Bot\nUse buttons below"},
+        "enter_host": {"fa": "آدرس IP یا هاست سرور را وارد کن:", "en": "Enter server IP or hostname:"},
+        "enter_port": {"fa": "پورت SSH (پیش‌فرض 22):", "en": "Enter SSH port (default 22):"},
+        "enter_user": {"fa": "نام کاربری:", "en": "Enter username:"},
+        "enter_pass": {"fa": "رمز عبور:", "en": "Enter password:"},
+        "connected": {"fa": "✅ متصل شدی به {user}@{host}", "en": "✅ Connected to {user}@{host}"},
+        "conn_failed": {"fa": "❌ خطا در اتصال: {error}", "en": "❌ Connection failed: {error}"},
+        "session_closed": {"fa": "🔌 جلسه SSH بسته شد", "en": "🔌 SSH session closed"},
+        "ctrl_sent": {"fa": "ارسال شد", "en": "sent"},
+        "file_cleared": {"fa": "🧹 تمام کدهای فایل پاک شد", "en": "🧹 File content cleared"},
+        "send_txt": {"fa": "📄 یه فایل txt بفرست تا تو ترمینال پیست کنم", "en": "📄 Send a .txt file to paste in terminal"},
+        "pasted": {"fa": "✅ محتوای فایل در ترمینال پیست شد", "en": "✅ File content pasted in terminal"},
+        "only_txt": {"fa": "فقط فایل txt قبوله", "en": "Only .txt files are accepted"},
+        "cmd_sent": {"fa": "📤 دستور ارسال شد: {cmd}", "en": "📤 Command sent: {cmd}"},
+        "press_connect": {"fa": "اول دکمه اتصال رو بزن", "en": "Press Connect button first"},
+        "dev_info": {"fa": "👨‍💻 توسعه دهنده:\nتلگرام: @Aria_qi\nبله: @aria_qi\nگیت‌هاب: github.com/ariaghasemi", "en": "👨‍💻 Developer:\nTelegram: @Aria_qi\nBale: @aria_qi\nGitHub: github.com/ariaghasemi"}
+    }
+    return texts.get(key, {}).get(BOT_LANG, texts.get(key, {}).get("en", key))
+
 def get_keyboard():
     return {
         "keyboard": [
-            ["🔌 Connect", "❌ Disconnect"],
-            ["⛔ Ctrl+C", "🔚 Ctrl+D"],
-            ["💾 Ctrl+X", "💾 Ctrl+X+Y"],
-            ["🚫 Ctrl+X+N", "🧹 Clear File"],
-            ["📤 Upload & Paste", "🔁 Last 50 Lines"],
-            ["🔁 Last 100 Lines", "⏎ Enter"],
-            ["📋 Help", "🔄 Reconnect"]
+            [get_text("connect_btn"), get_text("disconnect_btn")],
+            [get_text("ctrl_c_btn"), get_text("ctrl_d_btn")],
+            [get_text("ctrl_x_btn"), get_text("ctrl_xy_btn")],
+            [get_text("ctrl_xn_btn"), get_text("clear_btn")],
+            [get_text("upload_btn"), get_text("last50_btn")],
+            [get_text("last100_btn"), get_text("enter_btn")],
+            [get_text("help_btn"), get_text("reconnect_btn")],
+            [get_text("dev_btn")]
         ],
         "resize_keyboard": True
     }
@@ -351,7 +442,7 @@ def do_ssh_connect(chat_id, user_id, data):
             hostname=data["host"],
             port=data["port"],
             username=data["username"],
-            password=data["password"],
+            password=str(data["password"]),
             timeout=10
         )
         channel = client.invoke_shell(term='xterm', width=120, height=40)
@@ -371,92 +462,100 @@ def do_ssh_connect(chat_id, user_id, data):
                 time.sleep(0.1)
 
         threading.Thread(target=reader, daemon=True).start()
-        send_message(chat_id, f"Connected to {data['username']}@{data['host']}", get_keyboard())
+        send_message(chat_id, get_text("connected").format(user=data["username"], host=data["host"]), get_keyboard())
         channel.send("\n")
         log_session(user_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
-        send_message(chat_id, f"Connection failed: {str(e)}", get_keyboard())
+        send_message(chat_id, get_text("conn_failed").format(error=str(e)), get_keyboard())
 
 def process_message(chat_id, user_id, text):
-    if text == "🔌 Connect":
+    if text == get_text("dev_btn"):
+        send_message(chat_id, get_text("dev_info"), get_keyboard())
+        return
+
+    if text == get_text("connect_btn"):
         user_steps[user_id] = {"step": "host"}
-        send_message(chat_id, "Enter server IP or hostname:", get_keyboard())
-    elif text == "❌ Disconnect":
+        send_message(chat_id, get_text("enter_host"), get_keyboard())
+    elif text == get_text("disconnect_btn"):
         if user_id in sessions:
             sessions[user_id]["channel"].close()
             sessions[user_id]["ssh"].close()
             del sessions[user_id]
-            send_message(chat_id, "SSH session closed", get_keyboard())
-    elif text == "⛔ Ctrl+C" and user_id in sessions:
+            send_message(chat_id, get_text("session_closed"), get_keyboard())
+    elif text == get_text("ctrl_c_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x03')
-        send_message(chat_id, "Ctrl+C sent", get_keyboard())
-    elif text == "🔚 Ctrl+D" and user_id in sessions:
+        send_message(chat_id, f"Ctrl+C {get_text('ctrl_sent')}", get_keyboard())
+    elif text == get_text("ctrl_d_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x04')
-        send_message(chat_id, "Ctrl+D sent", get_keyboard())
-    elif text == "💾 Ctrl+X" and user_id in sessions:
+        send_message(chat_id, f"Ctrl+D {get_text('ctrl_sent')}", get_keyboard())
+    elif text == get_text("ctrl_x_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18')
-        send_message(chat_id, "Ctrl+X sent", get_keyboard())
-    elif text == "💾 Ctrl+X+Y" and user_id in sessions:
+        send_message(chat_id, f"Ctrl+X {get_text('ctrl_sent')}", get_keyboard())
+    elif text == get_text("ctrl_xy_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18Y\n')
-        send_message(chat_id, "Ctrl+X+Y sent (save & exit)", get_keyboard())
-    elif text == "🚫 Ctrl+X+N" and user_id in sessions:
+        send_message(chat_id, f"Ctrl+X+Y {get_text('ctrl_sent')} (save & exit)", get_keyboard())
+    elif text == get_text("ctrl_xn_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x18N\n')
-        send_message(chat_id, "Ctrl+X+N sent (cancel)", get_keyboard())
-    elif text == "🧹 Clear File" and user_id in sessions:
+        send_message(chat_id, f"Ctrl+X+N {get_text('ctrl_sent')} (cancel)", get_keyboard())
+    elif text == get_text("clear_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\x01')
         time.sleep(0.1)
         sessions[user_id]["channel"].send(b'\x7f')
-        send_message(chat_id, "File content cleared", get_keyboard())
-    elif text == "📤 Upload & Paste":
+        send_message(chat_id, get_text("file_cleared"), get_keyboard())
+    elif text == get_text("upload_btn"):
         user_steps[user_id] = {"step": "awaiting_upload"}
-        send_message(chat_id, "Send a .txt file to paste in terminal", get_keyboard())
-    elif text == "🔁 Last 50 Lines" and user_id in sessions:
+        send_message(chat_id, get_text("send_txt"), get_keyboard())
+    elif text == get_text("last50_btn") and user_id in sessions:
         sessions[user_id]["channel"].send("history | tail -50\n")
-        send_message(chat_id, "Sending last 50 lines...", get_keyboard())
-    elif text == "🔁 Last 100 Lines" and user_id in sessions:
+        send_message(chat_id, get_text("last50_btn"), get_keyboard())
+    elif text == get_text("last100_btn") and user_id in sessions:
         sessions[user_id]["channel"].send("history | tail -100\n")
-        send_message(chat_id, "Sending last 100 lines...", get_keyboard())
-    elif text == "⏎ Enter" and user_id in sessions:
+        send_message(chat_id, get_text("last100_btn"), get_keyboard())
+    elif text == get_text("enter_btn") and user_id in sessions:
         sessions[user_id]["channel"].send(b'\n')
-        send_message(chat_id, "Enter sent", get_keyboard())
-    elif text == "📋 Help":
+        send_message(chat_id, f"Enter {get_text('ctrl_sent')}", get_keyboard())
+    elif text == get_text("help_btn"):
         send_message(chat_id, 
-            "Commands:\nConnect - SSH connection\nCtrl+C - Interrupt\nCtrl+D - Exit shell\nUpload & Paste - Send text file\nLast Lines - Show history",
+            get_text("welcome") + "\n\n" +
+            get_text("connect_btn") + " - SSH " + get_text("connect_btn") + "\n" +
+            get_text("ctrl_c_btn") + " - " + get_text("ctrl_c_btn") + "\n" +
+            get_text("ctrl_d_btn") + " - " + get_text("ctrl_d_btn") + "\n" +
+            get_text("upload_btn") + " - " + get_text("upload_btn"),
             get_keyboard())
-    elif text == "🔄 Reconnect":
+    elif text == get_text("reconnect_btn"):
         if user_id in sessions:
             sessions[user_id]["channel"].close()
             sessions[user_id]["ssh"].close()
             del sessions[user_id]
             time.sleep(1)
         user_steps[user_id] = {"step": "host"}
-        send_message(chat_id, "Reconnecting...\nEnter server IP:", get_keyboard())
+        send_message(chat_id, get_text("enter_host"), get_keyboard())
     elif text == "/start":
-        send_message(chat_id, "🤖 SSH Terminal Bot for Bale\nUse buttons below to connect", get_keyboard())
+        send_message(chat_id, get_text("welcome"), get_keyboard())
     elif user_id in user_steps:
         step = user_steps[user_id].get("step")
         if step == "host":
             user_steps[user_id]["host"] = text
             user_steps[user_id]["step"] = "port"
-            send_message(chat_id, "Enter SSH port (default 22):", get_keyboard())
+            send_message(chat_id, get_text("enter_port"), get_keyboard())
         elif step == "port":
             port = int(text) if text.isdigit() else 22
             user_steps[user_id]["port"] = port
             user_steps[user_id]["step"] = "username"
-            send_message(chat_id, "Enter username:", get_keyboard())
+            send_message(chat_id, get_text("enter_user"), get_keyboard())
         elif step == "username":
             user_steps[user_id]["username"] = text
             user_steps[user_id]["step"] = "password"
-            send_message(chat_id, "Enter password:", get_keyboard())
+            send_message(chat_id, get_text("enter_pass"), get_keyboard())
         elif step == "password":
             do_ssh_connect(chat_id, user_id, user_steps[user_id])
             del user_steps[user_id]
     elif user_id in sessions:
         sessions[user_id]["channel"].send(text + "\n")
         log_session(user_id, f"CMD: {text}")
-        send_message(chat_id, f"Command sent: {text}", get_keyboard())
+        send_message(chat_id, get_text("cmd_sent").format(cmd=text), get_keyboard())
     else:
-        send_message(chat_id, "Press Connect button first", get_keyboard())
+        send_message(chat_id, get_text("press_connect"), get_keyboard())
 
 def process_document(chat_id, user_id, file_id):
     if user_id in user_steps and user_steps[user_id].get("step") == "awaiting_upload":
@@ -471,12 +570,12 @@ def process_document(chat_id, user_id, file_id):
                     for char in content:
                         channel.send(char)
                         time.sleep(0.002)
-                    send_message(chat_id, "File content pasted in terminal", get_keyboard())
+                    send_message(chat_id, get_text("pasted"), get_keyboard())
                 else:
-                    send_message(chat_id, "Connect to SSH first", get_keyboard())
+                    send_message(chat_id, get_text("press_connect"), get_keyboard())
         del user_steps[user_id]
     else:
-        send_message(chat_id, "Press Upload & Paste button first", get_keyboard())
+        send_message(chat_id, get_text("press_connect"), get_keyboard())
 
 def get_updates():
     global last_update_id
@@ -491,7 +590,7 @@ def get_updates():
                     chat_id = msg['chat']['id']
                     user_id = msg['from']['id']
                     if user_id not in ALLOWED_IDS:
-                        send_message(chat_id, "Access denied")
+                        send_message(chat_id, get_text("access_denied"))
                         continue
                     if 'document' in msg:
                         process_document(chat_id, user_id, msg['document']['file_id'])
@@ -515,6 +614,7 @@ BALECODE
 
     sed -i "s/REPLACE_TOKEN/$BALE_TOKEN/" bale/bot.py
     sed -i "s/REPLACE_USER_ID/$BALE_USER_ID/" bale/bot.py
+    sed -i "s/REPLACE_LANG/$LANG/" bale/bot.py
 
     cat > bale/requirements.txt << 'BALEREQ'
 paramiko==3.4.0
@@ -554,3 +654,4 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Installation completed!${NC}"
 echo -e "${GREEN}Check status with: systemctl status telegram-ssh-bot${NC}"
 echo -e "${GREEN}                 or: systemctl status bale-ssh-bot${NC}"
+echo -e "${BLUE}Developer: @Aria_qi (Telegram) | @aria_qi (Bale)${NC}"
