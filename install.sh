@@ -101,7 +101,7 @@ def get_text(key):
         "enter_host": ["آدرس IP یا هاست سرور را وارد کن:", "Enter server IP or hostname:"],
         "enter_port": ["پورت SSH (پیش‌فرض 22):", "Enter SSH port (default 22):"],
         "enter_user": ["نام کاربری:", "Enter username:"],
-        "enter_pass": ["رمز عبور:", "Enter password:"],
+        "enter_pass": ["رمز عبور را داخل \" \" قرار دهید:\nمثال: \"@1386ARIA\"", "Enter password inside \" \":\nExample: \"@1386ARIA\""],
         "connected": ["✅ متصل شدی به", "✅ Connected to"],
         "conn_failed": ["❌ خطا در اتصال:", "❌ Connection failed:"],
         "closed": ["🔌 جلسه SSH بسته شد", "🔌 SSH session closed"],
@@ -152,6 +152,12 @@ async def start(update, context):
         await update.message.reply_text(get_text("access_denied"))
         return
     await update.message.reply_text(get_text("start_text"), reply_markup=get_keyboard())
+
+def clean_password(password):
+    password = password.strip()
+    if (password.startswith('"') and password.endswith('"')) or (password.startswith("'") and password.endswith("'")):
+        password = password[1:-1]
+    return password
 
 async def handle_text(update, context):
     chat_id = update.effective_chat.id
@@ -231,6 +237,7 @@ async def handle_text(update, context):
             user_steps[chat_id]["step"] = "password"
             await update.message.reply_text(get_text("enter_pass"), reply_markup=get_keyboard())
         elif step == "password":
+            user_steps[chat_id]["password_raw"] = text
             await do_ssh_connect(update, context, chat_id, user_steps[chat_id])
             del user_steps[chat_id]
     elif chat_id in sessions:
@@ -242,9 +249,7 @@ async def handle_text(update, context):
 
 async def do_ssh_connect(update, context, chat_id, data):
     try:
-        password = data["password"]
-        if password.startswith("'") and password.endswith("'"):
-            password = password[1:-1]
+        password = clean_password(data["password_raw"])
         
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -280,10 +285,7 @@ async def do_ssh_connect(update, context, chat_id, data):
         log_session(chat_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
         error_msg = str(e)
-        if "password" in error_msg.lower():
-            await update.message.reply_text(f"{get_text('conn_failed')} رمز اشتباه است. اگر رمز با @ شروع می‌شود، آن را در ' ' قرار دهید", reply_markup=get_keyboard())
-        else:
-            await update.message.reply_text(f"{get_text('conn_failed')} {error_msg}", reply_markup=get_keyboard())
+        await update.message.reply_text(f"{get_text('conn_failed')} {error_msg}", reply_markup=get_keyboard())
 
 async def handle_document(update, context):
     chat_id = update.effective_chat.id
@@ -412,7 +414,7 @@ def get_text(key):
         "enter_host": ["آدرس IP یا هاست سرور را وارد کن:", "Enter server IP or hostname:"],
         "enter_port": ["پورت SSH (پیش‌فرض 22):", "Enter SSH port (default 22):"],
         "enter_user": ["نام کاربری:", "Enter username:"],
-        "enter_pass": ["رمز عبور:", "Enter password:"],
+        "enter_pass": ["رمز عبور را داخل \" \" قرار دهید:\nمثال: \"@1386ARIA\"", "Enter password inside \" \":\nExample: \"@1386ARIA\""],
         "connected": ["✅ متصل شدی به", "✅ Connected to"],
         "conn_failed": ["❌ خطا در اتصال:", "❌ Connection failed:"],
         "closed": ["🔌 جلسه SSH بسته شد", "🔌 SSH session closed"],
@@ -469,11 +471,15 @@ def send_message(chat_id, text, keyboard=None):
     except Exception as e:
         logger.error(f"Send error: {e}")
 
+def clean_password(password):
+    password = password.strip()
+    if (password.startswith('"') and password.endswith('"')) or (password.startswith("'") and password.endswith("'")):
+        password = password[1:-1]
+    return password
+
 def do_ssh_connect(chat_id, user_id, data):
     try:
-        password = data["password"]
-        if password.startswith("'") and password.endswith("'"):
-            password = password[1:-1]
+        password = clean_password(data["password_raw"])
         
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -506,10 +512,7 @@ def do_ssh_connect(chat_id, user_id, data):
         log_session(user_id, f"Connected to {data['username']}@{data['host']}:{data['port']}")
     except Exception as e:
         error_msg = str(e)
-        if "password" in error_msg.lower():
-            send_message(chat_id, f"{get_text('conn_failed')} رمز اشتباه است. اگر رمز با @ شروع می‌شود، آن را در ' ' قرار دهید", get_keyboard())
-        else:
-            send_message(chat_id, f"{get_text('conn_failed')} {error_msg}", get_keyboard())
+        send_message(chat_id, f"{get_text('conn_failed')} {error_msg}", get_keyboard())
 
 def process_message(chat_id, user_id, text):
     if text == get_text("connect_btn"):
@@ -585,6 +588,7 @@ def process_message(chat_id, user_id, text):
             user_steps[user_id]["step"] = "password"
             send_message(chat_id, get_text("enter_pass"), get_keyboard())
         elif step == "password":
+            user_steps[user_id]["password_raw"] = text
             do_ssh_connect(chat_id, user_id, user_steps[user_id])
             del user_steps[user_id]
     elif user_id in sessions:
