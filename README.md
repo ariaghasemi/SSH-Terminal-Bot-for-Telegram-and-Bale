@@ -1,42 +1,67 @@
-# SSH Terminal Bot for Telegram and Bale
+# SSH Terminal Bot for Telegram & Bale
 
-ربات ترمینال SSH برای پیامرسان‌های تلگرام و بله | اتصال به سرور لینوکس مثل ترمینال واقعی
+ربات پیشرفته اتصال SSH به سرور لینوکس از طریق پیامرسان‌های تلگرام و بله  
+امکان کنترل کامل ترمینال، ارسال فایل، پشتیبانی از کلیدهای کنترلی و کیبورد دائمی
 
-## ویژگی‌ها
+## قابلیت‌ها
 
-- اتصال SSH به سرور لینوکس
-- کیبورد ثابت پایین صفحه با دکمه‌های کاربردی
-- پشتیبانی از Ctrl+C, Ctrl+D, Ctrl+X
-- آپلود فایل txt و پیست خودکار در ترمینال
-- پاک کردن محتوای فایل در ویرایشگر nano
-- نمایش ۵۰ و ۱۰۰ خط آخر تاریخچه
-- اجرا به عنوان سرویس systemd
-- راه‌اندازی خودکار بعد از ریبوت
+- اتصال SSH به هر سرور لینوکس
+- کیبورد ثابت پایین صفحه با دکمه‌های:
+  - اتصال / قطع اتصال
+  -پشتیبانی از  Ctrl+C, Ctrl+D, Ctrl+X
+  - ذخیره و خروج در nano
+  - پاک کردن کل فایل در ویرایشگر
+  - آپلود فایل txt و پیست خودکار
+  - نمایش 50 و 100 خط آخر
+  - ارسال Enter خالی
+  -خودکار reconnect
+  - پشتیبانی از رمز عبور و کلید SSH
+  - اجرای دائمی با systemd
+  - ذخیره لاگ جلسات
+  - محدودیت دسترسی با Whitelist
 
-## راهنمای دریافت توکن و آیدی
+## پیش‌نیازها
 
-### تلگرام
-1. به @BotFather در تلگرام پیام بده `/newbot`
-2. توکن دریافتی را ذخیره کن
-3. برای گرفتن chat id به @userinfobot پیام بده
+- سرور لینوکس (Ubuntu/Debian/CentOS)
+- دسترسی root یا sudo
+- توکن ربات تلگرام از @BotFather
+- توکن ربات بله از @BotFatherBale
+- آیدی عددی کاربر (برای محدودیت دسترسی)
 
-### پیامرسان بله
-1. به @BotFather_Bale در بله پیام بده `/newbot`
-2. توکن دریافتی را ذخیره کن
-3. برای گرفتن user id به @IDMasterBot در بله پیام بده
+## دریافت توکن و آیدی
+# تلگرام
+به BotFather@ در تلگرام پیام بده newbot/
 
-## نصب
+نام و یوزرنیم ربات رو انتخاب کن
+
+توکن دریافت شده را ذخیره کن
+
+برای گرفتن آیدی عددی به userinfobot@ پیام بده start/
+
+# پیامرسان بله
+به BotFatherBale@ پیام بده newbot/
+
+توکن را دریافت کن
+
+برای آیدی عددی به IDMasterBot@ پیام بده start/
+
+نحوه استفاده
+بعد از نصب، ربات رو start/ کن
+
+دکمه اتصال را بزن
+
+آیپی سرور، پورت، نام کاربری و رمز را وارد کن
+
+مثل ترمینال واقعی از دکمه‌ها استفاده کن
+## نصب سریع
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/telegram-bale-ssh-bot.git
-cd telegram-bale-ssh-bot
-chmod +x install.sh
-./install.sh
+bash <(curl -s https://raw.githubusercontent.com/YOUR-USERNAME/telegram-bale-ssh-bot/main/install.sh)
 ```
-
 نصب‌کننده از تو میپرسه کدوم پیامرسان رو نصب کنی.
-
-مدیریت سرویس‌ها
+## لایسنس
+MIT License - استفاده آزاد با ذکر منبع
+### مدیریت سرویس‌ها
 # تلگرام
 
 ```bash
@@ -56,3 +81,6 @@ systemctl stop bale-ssh-bot
 ```bash
 tail -f /root/telegram_ssh_bot/bot.log
 tail -f /root/telegram_ssh_bot/bale_bot.log
+```
+## توسعه‌دهنده
+[ARIA yemerta] - [[GitHub Profile Link](https://github.com/ariaghasemi)]
