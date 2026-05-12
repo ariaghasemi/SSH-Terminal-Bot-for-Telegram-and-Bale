@@ -83,5 +83,24 @@ systemctl stop bale-ssh-bot
 tail -f /root/telegram_ssh_bot/bot.log
 tail -f /root/telegram_ssh_bot/bale_bot.log
 ```
+## رفع اشکال
+
+### ربات پاسخ نمی‌دهد
+```bash
+systemctl status telegram-ssh-bot
+journalctl -u telegram-ssh-bot -f
+```
+### خطای ModuleNotFoundError
+```bash
+cd /root/telegram_ssh_bot/telegram
+source venv/bin/activate
+pip install -r requirements.txt
+systemctl restart telegram-ssh-bot
+```
+### تصال SSH برقرار نمی‌شود
+پورت 22 روی سرور مقصد باز باشد
+
+فایروال سرور شما (UFW/iptables) اتصال خروجی را مسدود نکند
+
 ## توسعه‌دهنده
 [ARIA yemerta] - [[GitHub Profile Link](https://github.com/ariaghasemi)]
