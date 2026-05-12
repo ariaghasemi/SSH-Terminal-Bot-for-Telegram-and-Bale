@@ -23,7 +23,7 @@
 ### پیامرسان بله
 1. به @BotFather_Bale در بله پیام بده `/newbot`
 2. توکن دریافتی را ذخیره کن
-3. برای گرفتن user id به @MyIdBot در بله پیام بده
+3. برای گرفتن user id به @IDMasterBot در بله پیام بده
 
 ## نصب
 
@@ -32,20 +32,25 @@ git clone https://github.com/YOUR_USERNAME/telegram-bale-ssh-bot.git
 cd telegram-bale-ssh-bot
 chmod +x install.sh
 ./install.sh
+```
 
 نصب‌کننده از تو میپرسه کدوم پیامرسان رو نصب کنی.
 
 مدیریت سرویس‌ها
-```bash
 # تلگرام
+
+```bash
 systemctl status telegram-ssh-bot
 systemctl restart telegram-ssh-bot
 systemctl stop telegram-ssh-bot
+```
 
 # بله
+```bash
 systemctl status bale-ssh-bot
 systemctl restart bale-ssh-bot
 systemctl stop bale-ssh-bot
+```
 
 مشاهده لاگ
 ```bash
