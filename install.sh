@@ -1,4 +1,3 @@
-cat > install.sh << 'EOF'
 #!/bin/bash
 
 GREEN='\033[0;32m'
@@ -692,6 +691,5 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Installation completed!${NC}"
 echo -e "${GREEN}Check status with: systemctl status telegram-ssh-bot${NC}"
 echo -e "${GREEN}                 or: systemctl status bale-ssh-bot${NC}"
-EOF
 
 chmod +x install.sh
