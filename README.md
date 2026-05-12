@@ -97,7 +97,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 systemctl restart telegram-ssh-bot
 ```
-### تصال SSH برقرار نمی‌شود
+### اتصال SSH برقرار نمی‌شود
 پورت 22 روی سرور مقصد باز باشد
 
 فایروال سرور شما (UFW/iptables) اتصال خروجی را مسدود نکند
