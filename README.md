@@ -70,13 +70,13 @@ bash <(curl -s https://raw.githubusercontent.com/ariaghasemi/SSH-Terminal-Bot-fo
 ```
 نصب‌کننده از تو میپرسه کدوم پیامرسان رو نصب کنی.
 
-● 1-telegram
-● 2-bale
+● 1- telegram
+● 2- bale
 
 بعد زبان ربات رو میتونید انتخاب کنید.
 
-● 1-فارسی
-● 2-english
+● 1- persian
+● 2- english
 
 بعد توکن و یوزر آیدی پلتفرم رو نیخواد از شما و بعدش تمام!
 
