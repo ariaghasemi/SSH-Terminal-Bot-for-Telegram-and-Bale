@@ -1,9 +1,3 @@
-
----
-
-## 3️⃣ فایل `install.sh`
-
-```bash
 #!/bin/bash
 
 GREEN='\033[0;32m'
